@@ -1,0 +1,90 @@
+<div class="min-h-screen bg-[#fcfaf7] text-black font-sans antialiased">
+  <app-navbar></app-navbar>
+
+  <div class="pt-24 pb-24 min-h-screen">
+    <!-- Category Header -->
+    <div class="bg-gray-50 py-20 mb-20 border-b">
+      <div class="max-w-7xl mx-auto px-4">
+        <span class="uppercase tracking-[0.3em] text-[10px] text-gray-400 mb-4 block">Collection</span>
+        <h1 class="text-6xl md:text-7xl font-medium tracking-tight mb-8 capitalize">{{ category }}</h1>
+        <p class="max-w-xl text-gray-500 font-light text-lg">
+          Discover our curated range of {{ category.toLowerCase() }} essentials. From artisan formulas to clinical breakthroughs, find your signature radiance.
+        </p>
+      </div>
+    </div>
+
+    <!-- Filter and Sort Header -->
+    <div class="max-w-7xl mx-auto px-4">
+      <div class="flex justify-between items-center mb-12 text-[11px] uppercase tracking-widest text-gray-500 font-bold">
+        <span>{{ filteredProducts.length }} Products</span>
+        <div class="flex gap-8">
+          <button
+            class="hover:text-black transition-colors"
+            [class.text-black]="sortBy === 'default'"
+            (click)="sortProducts('default')"
+          >
+            Default
+          </button>
+          <button
+            class="hover:text-black transition-colors"
+            [class.text-black]="sortBy === 'price-low'"
+            (click)="sortProducts('price-low')"
+          >
+            Price: Low to High
+          </button>
+          <button
+            class="hover:text-black transition-colors"
+            [class.text-black]="sortBy === 'price-high'"
+            (click)="sortProducts('price-high')"
+          >
+            Price: High to Low
+          </button>
+          <button
+            class="hover:text-black transition-colors"
+            [class.text-black]="sortBy === 'rating'"
+            (click)="sortProducts('rating')"
+          >
+            Highest Rated
+          </button>
+        </div>
+      </div>
+
+      <!-- Product Grid -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-12">
+        <div
+          class="group cursor-pointer"
+          *ngFor="let product of filteredProducts"
+          (click)="navigateToProduct(product.id)"
+        >
+          <div class="relative aspect-[3/4] overflow-hidden bg-gray-50 mb-6">
+            <img
+              [src]="product.image"
+              [alt]="product.name"
+              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000 ease-out"
+            />
+            <div class="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors"></div>
+            <div
+              class="absolute inset-x-0 bottom-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out">
+              <button
+                class="w-full bg-white/95 backdrop-blur-sm py-3 uppercase text-[10px] tracking-[0.2em] font-bold hover:bg-black hover:text-white transition-all shadow-xl">
+                Quick Add — ${{ product.price }}
+              </button>
+            </div>
+          </div>
+
+          <div class="space-y-1 text-center">
+            <p class="text-[9px] uppercase tracking-[0.3em] text-gray-400 font-bold">
+              {{ product.category }}
+            </p>
+            <h3 class="text-base font-medium text-gray-900 group-hover:text-[#D4AF37] transition-colors">
+              {{ product.name }}
+            </h3>
+            <p class="text-sm text-gray-500 font-light">${{ product.price }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <app-footer></app-footer>
+</div>

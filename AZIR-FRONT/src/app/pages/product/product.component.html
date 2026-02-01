@@ -1,0 +1,148 @@
+<div class="min-h-screen bg-[#fcfaf7] text-black font-sans antialiased" *ngIf="product">
+  <app-navbar></app-navbar>
+
+  <div class="pt-32 pb-32">
+    <div class="max-w-7xl mx-auto px-6">
+      <!-- Back Button -->
+      <button
+        (click)="goBack()"
+        class="group flex items-center gap-3 text-[10px] uppercase tracking-[0.4em] text-gray-400 hover:text-black mb-16 transition-colors font-bold"
+      >
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="group-hover:-translate-x-1 transition-transform">
+          <path d="m15 18-6-6 6-6"/>
+        </svg>
+        Back to browsing
+      </button>
+
+      <!-- Product Details Grid -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-20 lg:gap-32 mb-40">
+        <!-- Sticky Product Image -->
+        <div class="aspect-[4/5] bg-gray-50 overflow-hidden rounded-sm shadow-xl sticky top-32 h-fit product-image-container">
+          <img
+            [src]="product.image"
+            [alt]="product.name"
+            class="w-full h-full object-cover animate-subtle-zoom"
+          />
+        </div>
+
+        <!-- Product Info -->
+        <div class="flex flex-col pt-4">
+          <span class="uppercase tracking-[0.5em] text-[10px] text-[#D4AF37] font-bold mb-6">{{ product.category }}</span>
+          <h1 class="text-6xl md:text-7xl font-medium mb-8 leading-tight tracking-tighter">{{ product.name }}</h1>
+          <p class="text-3xl font-light mb-12 tracking-tight text-gray-800">${{ product.price }}</p>
+
+          <!-- Rating -->
+          <div class="flex items-center gap-6 mb-12 pb-12 border-b">
+            <div class="flex gap-1">
+              <svg
+                *ngFor="let i of [0,1,2,3,4]"
+                class="w-4 h-4"
+                [class.text-[#D4AF37]]="i < Math.floor(product.rating)"
+                [class.text-gray-200]="i >= Math.floor(product.rating)"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+              </svg>
+            </div>
+            <span class="text-[10px] text-gray-400 uppercase tracking-[0.2em] font-bold">Verified Natural Product</span>
+          </div>
+
+          <!-- Description -->
+          <p class="text-gray-500 leading-relaxed text-xl mb-16 font-light">
+            {{ product.longDescription }}
+          </p>
+
+          <!-- Add to Cart Buttons -->
+          <div class="flex flex-col sm:flex-row gap-4 mb-20">
+            <button
+              class="flex-1 bg-black text-white py-6 uppercase text-xs tracking-[0.4em] font-bold hover:bg-[#D4AF37] transition-all duration-500 hover:scale-[1.02] active:scale-[0.98] shadow-2xl"
+            >
+              Add to Bag
+            </button>
+            <button class="flex-1 border border-black/10 py-6 uppercase text-xs tracking-[0.4em] font-bold hover:bg-black hover:text-white transition-all duration-500">
+              Wishlist
+            </button>
+          </div>
+
+          <!-- Ingredients Section -->
+          <div class="space-y-16">
+            <div class="group">
+              <h4 class="uppercase tracking-[0.4em] text-[10px] font-black mb-6 text-black/40 group-hover:text-black transition-colors">
+                The Ingredients
+              </h4>
+              <div class="flex flex-wrap gap-3">
+                <span
+                  *ngFor="let ing of product.ingredients"
+                  class="text-[10px] uppercase tracking-widest bg-white px-5 py-3 border border-black/5 rounded-full text-gray-500 font-bold hover:border-[#D4AF37] transition-colors cursor-default"
+                >
+                  {{ ing }}
+                </span>
+              </div>
+            </div>
+
+            <!-- Application Ritual Section -->
+            <div class="group">
+              <h4 class="uppercase tracking-[0.4em] text-[10px] font-black mb-6 text-black/40 group-hover:text-black transition-colors">
+                Application Ritual
+              </h4>
+              <div class="relative pl-12">
+                <div class="absolute left-0 top-0 bottom-0 w-[2px] bg-[#D4AF37]/20 group-hover:bg-[#D4AF37] transition-colors"></div>
+                <p class="text-lg text-gray-600 leading-relaxed font-light italic">
+                  "{{ product.usage }}"
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Related Products Carousel -->
+      <div class="border-t pt-32" *ngIf="relatedProducts.length > 0">
+        <div class="flex items-end justify-between mb-20">
+          <div>
+            <span class="uppercase tracking-[0.4em] text-[10px] text-[#D4AF37] font-bold mb-4 block">
+              You may also like
+            </span>
+            <h2 class="text-5xl font-medium tracking-tight">Complete the Ritual</h2>
+          </div>
+          <button
+            class="text-[10px] uppercase tracking-[0.4em] font-bold border-b border-black pb-1 hover:text-[#D4AF37] hover:border-[#D4AF37] transition-all"
+            (click)="goBack()"
+          >
+            View Collection
+          </button>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-12">
+          <div
+            class="group cursor-pointer"
+            *ngFor="let rp of relatedProducts"
+            (click)="navigateToProduct(rp.id)"
+          >
+            <div class="relative aspect-[3/4] overflow-hidden bg-gray-50 mb-6">
+              <img
+                [src]="rp.image"
+                [alt]="rp.name"
+                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000 ease-out"
+              />
+              <div class="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors"></div>
+            </div>
+
+            <div class="space-y-1 text-center">
+              <p class="text-[9px] uppercase tracking-[0.3em] text-gray-400 font-bold">
+                {{ rp.category }}
+              </p>
+              <h3 class="text-base font-medium text-gray-900 group-hover:text-[#D4AF37] transition-colors">
+                {{ rp.name }}
+              </h3>
+              <p class="text-sm text-gray-500 font-light">${{ rp.price }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <app-footer></app-footer>
+</div>

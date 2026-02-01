@@ -1,1 +1,141 @@
-/* You can add global styles to this file, and also import other style files */
+/* Global styles for AZIR Cosmetics - Natural Cosmetics Brand */
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: #fcfaf7;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #e5e5e5;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #D4AF37;
+}
+
+/* Selection styling */
+::selection {
+  background-color: #D4AF37;
+  color: white;
+}
+
+/* Typography enhancements - Editorial, high-fashion aesthetic */
+h1, h2, h3, .serif {
+  font-family: 'Playfair Display', serif;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+}
+
+/* Large typography for editorial feel */
+h1 {
+  font-size: clamp(3rem, 8vw, 9rem);
+  line-height: 0.85;
+}
+
+h2 {
+  font-size: clamp(2.5rem, 6vw, 7rem);
+  line-height: 1.05;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: #fcfaf7;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Refined spacing utilities */
+.space-y-12 > * + * {
+  margin-top: 3rem;
+}
+
+.space-y-10 > * + * {
+  margin-top: 2.5rem;
+}
+
+.space-y-4 > * + * {
+  margin-top: 1rem;
+}
+
+/* Enhanced animations - Subtle and refined */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes subtle-zoom {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(1.1);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.6s ease-out;
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 1s ease-out forwards;
+  opacity: 0;
+}
+
+.delay-100 {
+  animation-delay: 0.1s;
+}
+
+.delay-200 {
+  animation-delay: 0.2s;
+}
+
+.delay-300 {
+  animation-delay: 0.3s;
+}
+
+/* Parallax effect for hero */
+.hero-parallax {
+  position: relative;
+  overflow: hidden;
+}
+
+/* Refined transitions */
+.transition-refined {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Page transition animations */
+.page-enter {
+  animation: fade-in-up 0.6s ease-out;
+}
+
+/* Enhanced hover effects */
+.group:hover .group-hover\:scale-110 {
+  transform: scale(1.1);
+  transition: transform 1s cubic-bezier(0.4, 0, 0.2, 1);
+}

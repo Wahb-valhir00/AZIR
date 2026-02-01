@@ -1,0 +1,60 @@
+<footer class="bg-black text-white py-20 px-4">
+  <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12">
+    <div class="col-span-1 md:col-span-1">
+      <h2 class="text-3xl font-bold tracking-[0.2em] mb-6">AZIR</h2>
+      <p class="text-gray-400 text-sm leading-relaxed mb-8">
+        The pinnacle of cosmetic elegance. We believe beauty should be as effortless as it is exquisite.
+      </p>
+      <div class="flex gap-4">
+        <a
+          *ngFor="let s of socialLinks"
+          href="#"
+          class="w-8 h-8 flex items-center justify-center border border-gray-800 text-xs hover:border-white transition-colors"
+        >
+          {{ s }}
+        </a>
+      </div>
+    </div>
+
+    <div>
+      <h4 class="uppercase tracking-widest text-xs font-bold mb-6">Experience</h4>
+      <ul class="space-y-4 text-sm text-gray-400">
+        <li><a href="#" class="hover:text-white transition-colors">Find a Boutique</a></li>
+        <li><a href="#" class="hover:text-white transition-colors">Virtual Try-On</a></li>
+        <li><a href="#" class="hover:text-white transition-colors">Beauty Consultations</a></li>
+        <li><a href="#" class="hover:text-white transition-colors">Loyalty Program</a></li>
+      </ul>
+    </div>
+
+    <div>
+      <h4 class="uppercase tracking-widest text-xs font-bold mb-6">Services</h4>
+      <ul class="space-y-4 text-sm text-gray-400">
+        <li><a href="#" class="hover:text-white transition-colors">Shipping & Returns</a></li>
+        <li><a href="#" class="hover:text-white transition-colors">Contact Us</a></li>
+        <li><a href="#" class="hover:text-white transition-colors">Privacy Policy</a></li>
+        <li><a href="#" class="hover:text-white transition-colors">Terms of Service</a></li>
+      </ul>
+    </div>
+
+    <div>
+      <h4 class="uppercase tracking-widest text-xs font-bold mb-6">Newsletter</h4>
+      <p class="text-sm text-gray-400 mb-6">
+        Join the AZIR inner circle for exclusive previews and offers.
+      </p>
+      <div class="flex border-b border-gray-700 pb-2">
+        <input
+          type="email"
+          placeholder="Email Address"
+          class="bg-transparent flex-1 text-sm outline-none placeholder:text-gray-600"
+        />
+        <button class="uppercase text-[10px] tracking-widest font-bold">Join</button>
+      </div>
+    </div>
+  </div>
+
+  <div
+    class="max-w-7xl mx-auto mt-20 pt-8 border-t border-gray-900 flex flex-col md:flex-row justify-between items-center gap-4 text-[10px] uppercase tracking-widest text-gray-500">
+    <p>&copy; 2025 AZIR COSMETIQUES. ALL RIGHTS RESERVED.</p>
+    <p>MADE IN FRANCE</p>
+  </div>
+</footer>

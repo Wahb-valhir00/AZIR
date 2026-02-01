@@ -1,0 +1,18 @@
+/* Product page specific styles */
+.product-image-container {
+  position: sticky;
+  top: 8rem;
+}
+
+@keyframes subtle-zoom {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(1.05);
+  }
+}
+
+.animate-subtle-zoom {
+  animation: subtle-zoom 20s infinite alternate ease-in-out;
+}

@@ -1,0 +1,191 @@
+<div class="min-h-screen bg-[#fcfaf7] text-black font-sans antialiased">
+  <app-navbar></app-navbar>
+
+  <!-- Hero with Parallax Zoom Animation -->
+  <section class="relative h-screen w-full flex items-center overflow-hidden bg-black hero-parallax">
+    <div class="absolute inset-0 z-0 hero-bg">
+      <img
+        src="https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&q=80&w=1920"
+        alt="Natural Cosmetics"
+        class="w-full h-full object-cover opacity-60 grayscale-[30%]"
+      />
+    </div>
+
+    <div class="absolute inset-0 z-10 bg-gradient-to-r from-black/80 via-black/20 to-transparent"></div>
+
+    <div class="relative z-20 max-w-7xl mx-auto px-6 w-full pt-20">
+      <div class="max-w-3xl">
+        <div class="overflow-hidden mb-6 animate-fade-in-up">
+          <span
+            class="uppercase tracking-[0.6em] text-[10px] md:text-xs text-[#D4AF37] font-bold block">
+            The 2025 Natural Collection
+          </span>
+        </div>
+
+        <h1
+          class="text-7xl md:text-[9rem] text-white leading-[0.85] mb-12 tracking-tighter animate-fade-in-up delay-100">
+          Radiance <br />
+          <span class="italic serif text-[#D4AF37]/90">Redefined.</span>
+        </h1>
+
+        <div class="max-w-md space-y-10 animate-fade-in-up delay-200">
+          <p class="text-lg md:text-xl text-white/70 font-light leading-relaxed">
+            Where nature's finest ingredients meet clinical precision. Discover the future of luxury natural beauty, crafted for the discerning minimalist.
+          </p>
+
+          <div class="flex flex-col sm:flex-row gap-6 pt-4">
+            <button
+              class="group relative overflow-hidden bg-white text-black px-12 py-5 uppercase text-xs tracking-[0.3em] font-bold hover:text-white transition-colors duration-500">
+              <span class="relative z-10">Shop the Edit</span>
+              <div
+                class="absolute inset-0 bg-black translate-y-full group-hover:translate-y-0 transition-transform duration-500"></div>
+            </button>
+            <button
+              class="px-12 py-5 uppercase text-xs tracking-[0.3em] font-bold text-white border border-white/30 hover:bg-white hover:text-black transition-all duration-500">
+              Our Story
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="absolute bottom-12 right-12 z-20 hidden lg:flex items-center gap-12 text-white/40 text-[9px] uppercase tracking-[0.4em] font-bold">
+      <div class="flex items-center gap-4">
+        <span>Paris</span>
+        <div class="w-8 h-[1px] bg-white/20"></div>
+        <span>Geneva</span>
+        <div class="w-8 h-[1px] bg-white/20"></div>
+        <span>NYC</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main content -->
+  <main class="max-w-7xl mx-auto px-4 py-32">
+    <!-- Category cards -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-40">
+      <div
+        class="group relative aspect-[3/4] overflow-hidden cursor-pointer bg-gray-100"
+        *ngFor="let cat of categories; let idx = index"
+        [routerLink]="['/category', cat.toLowerCase()]"
+      >
+        <img
+          [src]="idx === 0
+                 ? 'https://images.unsplash.com/photo-1556228578-8c7c2f9a2e3d?auto=format&fit=crop&q=80&w=800'
+                 : idx === 1
+                   ? 'https://images.unsplash.com/photo-1522338242992-e1a54906a8da?auto=format&fit=crop&q=80&w=800'
+                   : 'https://images.unsplash.com/photo-1541643600914-78b084683601?auto=format&fit=crop&q=80&w=800'"
+          class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000 ease-out"
+          [alt]="cat"
+        />
+        <div class="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors duration-500"></div>
+        <div class="absolute inset-0 flex flex-col items-center justify-center text-white">
+          <span class="uppercase tracking-[0.5em] text-[10px] mb-2 opacity-80">Collection</span>
+          <h3 class="text-3xl font-medium tracking-widest">{{ cat }}</h3>
+          <div class="mt-6 w-0 group-hover:w-16 h-[1px] bg-white transition-all duration-500"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bestsellers heading -->
+    <div class="text-center mb-24">
+      <span class="uppercase tracking-[0.5em] text-[10px] text-gray-400 mb-6 block font-bold">
+        The Essential Edit
+      </span>
+      <h2 class="text-5xl md:text-7xl font-medium mb-12 tracking-tight">Iconic Creations</h2>
+      <div class="w-12 h-[2px] bg-[#D4AF37] mx-auto"></div>
+    </div>
+
+    <!-- Product grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-20">
+      <div
+        class="group cursor-pointer"
+        *ngFor="let product of featuredProducts"
+        [routerLink]="['/product', product.id]"
+      >
+        <div class="relative aspect-[3/4] overflow-hidden bg-gray-50 mb-6">
+          <img
+            [src]="product.image"
+            [alt]="product.name"
+            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000 ease-out"
+          />
+          <div class="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors"></div>
+          <div
+            class="absolute inset-x-0 bottom-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out">
+            <button
+              class="w-full bg-white/95 backdrop-blur-sm py-3 uppercase text-[10px] tracking-[0.2em] font-bold hover:bg-black hover:text-white transition-all shadow-xl">
+              Quick Add — ${{ product.price }}
+            </button>
+          </div>
+        </div>
+
+        <div class="space-y-1 text-center">
+          <p class="text-[9px] uppercase tracking-[0.3em] text-gray-400 font-bold">
+            {{ product.category }}
+          </p>
+          <h3 class="text-base font-medium text-gray-900 group-hover:text-[#D4AF37] transition-colors">
+            {{ product.name }}
+          </h3>
+          <p class="text-sm text-gray-500 font-light">${{ product.price }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Artistry section -->
+    <div class="mt-48 relative overflow-hidden bg-[#F5F5F0] py-40 px-6">
+      <div class="max-w-4xl mx-auto text-center space-y-12 relative z-10">
+        <h2 class="text-5xl md:text-8xl font-medium leading-[0.9] tracking-tighter">
+          Beyond Beauty. <br />
+          <span class="italic serif text-[#D4AF37]">Pure Artistry.</span>
+        </h2>
+        <p class="text-lg md:text-2xl text-gray-500 font-light leading-relaxed max-w-2xl mx-auto">
+          AZIR is a testament to the pursuit of aesthetic perfection. Every bottle is a masterpiece of form and
+          function, crafted from nature's finest ingredients.
+        </p>
+        <button
+          class="group relative inline-flex items-center gap-4 bg-black text-white px-14 py-6 uppercase text-xs tracking-[0.4em] font-bold hover:bg-[#D4AF37] transition-all duration-500 overflow-hidden">
+          <span class="relative z-10">Explore the House</span>
+          <div
+            class="absolute inset-0 bg-[#D4AF37] translate-x-[-100%] group-hover:translate-x-0 transition-transform duration-500"></div>
+        </button>
+      </div>
+      <div class="absolute top-0 right-0 w-[40rem] h-[40rem] bg-[#D4AF37]/5 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl"></div>
+      <div class="absolute bottom-0 left-0 w-[50rem] h-[50rem] bg-[#D4AF37]/5 rounded-full translate-y-1/2 -translate-x-1/2 blur-3xl"></div>
+    </div>
+
+    <!-- Feature grid -->
+    <div class="mt-48 grid grid-cols-1 md:grid-cols-2 gap-32 items-center">
+      <div class="aspect-[3/4] bg-gray-50 group overflow-hidden relative shadow-2xl">
+        <img
+          src="https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&q=80&w=1000"
+          class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-[2s] ease-out"
+          alt="Natural Ingredients"
+        />
+        <div class="absolute inset-0 bg-black/5"></div>
+      </div>
+      <div class="space-y-12 lg:pr-20">
+        <span class="uppercase tracking-[0.5em] text-[10px] text-[#D4AF37] font-bold">
+          Heritage & Excellence
+        </span>
+        <h2 class="text-6xl font-medium leading-[1.05] tracking-tight">
+          Sustainable Sourcing, <br />Superior Results.
+        </h2>
+        <p class="text-xl text-gray-500 font-light leading-relaxed">
+          Our laboratories work exclusively with ethically harvested natural ingredients from the French countryside. Each
+          formula is meticulously balanced to ensure clinical efficacy while respecting the skin's natural barrier.
+        </p>
+        <div class="grid grid-cols-2 gap-8 pt-8">
+          <div class="flex flex-col gap-3" *ngFor="let item of ['Vegan Formulations', 'Cruelty Free', 'Dermatologist Tested', 'Carbon Neutral']">
+            <div class="w-6 h-[1px] bg-[#D4AF37]"></div>
+            <span class="text-[10px] uppercase tracking-widest text-black font-black">
+              {{ item }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <app-footer></app-footer>
+</div>
