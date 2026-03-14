@@ -1,0 +1,52 @@
+/* Custom animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.bg-red-50,
+.bg-green-50 {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Form focus states */
+input:focus {
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Button hover effects */
+button[type="submit"]:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+button[type="submit"]:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Link hover effects */
+a:hover {
+  text-decoration: underline;
+}
+
+/* Demo account styling */
+.bg-gray-50 {
+  background-color: #f9fafb;
+}
+
+/* Error message animation */
+.text-red-600 {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Success message animation */
+.text-green-700 {
+  animation: fadeIn 0.3s ease-out;
+}

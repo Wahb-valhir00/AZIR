@@ -1,0 +1,645 @@
+<div class="min-h-screen bg-[#fcfaf7]">
+  <app-navbar></app-navbar>
+
+  <div class="max-w-7xl mx-auto px-4 py-8">
+    <!-- Header -->
+    <div class="text-center mb-8">
+      <h1 class="text-3xl font-bold tracking-tight mb-2">Checkout</h1>
+      <p class="text-gray-600">Complete your order in just a few steps</p>
+    </div>
+
+    <!-- Progress Steps -->
+    <div class="mb-12">
+      <div class="flex items-center justify-center">
+        <div class="flex items-center">
+          <!-- Step 1 -->
+          <div class="flex items-center">
+            <button
+              (click)="goToStep(1)"
+              [class.bg-black]="currentStep >= 1"
+              [class.bg-gray-300]="currentStep < 1"
+              class="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold transition-colors"
+            >
+              1
+            </button>
+            <span class="ml-3 text-sm font-medium" [class.text-black]="currentStep >= 1" [class.text-gray-400]="currentStep < 1">
+              Shipping
+            </span>
+          </div>
+
+          <!-- Connector -->
+          <div class="w-16 h-0.5 mx-4" [class.bg-black]="currentStep >= 2" [class.bg-gray-300]="currentStep < 1"></div>
+
+          <!-- Step 2 -->
+          <div class="flex items-center">
+            <button
+              (click)="goToStep(2)"
+              [class.bg-black]="currentStep >= 2"
+              [class.bg-gray-300]="currentStep < 2"
+              class="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold transition-colors"
+            >
+              2
+            </button>
+            <span class="ml-3 text-sm font-medium" [class.text-black]="currentStep >= 2" [class.text-gray-400]="currentStep < 2">
+              Payment
+            </span>
+          </div>
+
+          <!-- Connector -->
+          <div class="w-16 h-0.5 mx-4" [class.bg-black]="currentStep >= 3" [class.bg-gray-300]="currentStep < 2"></div>
+
+          <!-- Step 3 -->
+          <div class="flex items-center">
+            <button
+              (click)="goToStep(3)"
+              [class.bg-black]="currentStep >= 3"
+              [class.bg-gray-300]="currentStep < 3"
+              class="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold transition-colors"
+            >
+              3
+            </button>
+            <span class="ml-3 text-sm font-medium" [class.text-black]="currentStep >= 3" [class.text-gray-400]="currentStep < 3">
+              Review
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Error Message -->
+    <div 
+      *ngIf="errorMessage" 
+      class="mb-6 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm"
+    >
+      {{ errorMessage }}
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <!-- Main Content -->
+      <div class="lg:col-span-2">
+        <form [formGroup]="checkoutForm">
+          <!-- Step 1: Shipping Address -->
+          <div *ngIf="currentStep === 1" class="bg-white p-6 rounded-lg border border-gray-200">
+            <h2 class="text-xl font-bold mb-6">Shipping Address</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">First Name *</label>
+                <input
+                  formControlName="shippingFirstName"
+                  type="text"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-black"
+                  [class.border-red-500]="shippingFirstName?.invalid && shippingFirstName?.touched"
+                >
+                <div *ngIf="shippingFirstName?.invalid && shippingFirstName?.touched" class="text-xs text-red-600 mt-1">
+                  First name is required
+                </div>
+              </div>
+              
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Last Name *</label>
+                <input
+                  formControlName="shippingLastName"
+                  type="text"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-black"
+                  [class.border-red-500]="shippingLastName?.invalid && shippingLastName?.touched"
+                >
+                <div *ngIf="shippingLastName?.invalid && shippingLastName?.touched" class="text-xs text-red-600 mt-1">
+                  Last name is required
+                </div>
+              </div>
+            </div>
+
+            <div class="mb-4">
+              <label class="block text-sm font-medium text-gray-700 mb-1">Company (Optional)</label>
+              <input
+                formControlName="shippingCompany"
+                type="text"
+                class="w-full px-3 py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-black"
+              >
+            </div>
+
+            <div class="mb-4">
+              <label class="block text-sm font-medium text-gray-700 mb-1">Street Address *</label>
+              <input
+                formControlName="shippingStreet"
+                type="text"
+                class="w-full px-3 py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-black"
+                [class.border-red-500]="shippingStreet?.invalid && shippingStreet?.touched"
+              >
+              <div *ngIf="shippingStreet?.invalid && shippingStreet?.touched" class="text-xs text-red-600 mt-1">
+                Street address is required
+              </div>
+            </div>
+
+            <div class="mb-4">
+              <label class="block text-sm font-medium text-gray-700 mb-1">Apartment, suite, etc. (Optional)</label>
+              <input
+                formControlName="shippingApartment"
+                type="text"
+                class="w-full px-3 py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-black"
+              >
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">City *</label>
+                <input
+                  formControlName="shippingCity"
+                  type="text"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-black"
+                  [class.border-red-500]="shippingCity?.invalid && shippingCity?.touched"
+                >
+                <div *ngIf="shippingCity?.invalid && shippingCity?.touched" class="text-xs text-red-600 mt-1">
+                  City is required
+                </div>
+              </div>
+              
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Governorate *</label>
+                <select
+                  formControlName="shippingState"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-black"
+                  [class.border-red-500]="shippingState?.invalid && shippingState?.touched"
+                >
+                  <option value="">Select Governorate</option>
+                  <option value="Tunis">Tunis</option>
+                  <option value="Ariana">Ariana</option>
+                  <option value="Ben Arous">Ben Arous</option>
+                  <option value="Manouba">Manouba</option>
+                  <option value="Nabeul">Nabeul</option>
+                  <option value="Zaghouan">Zaghouan</option>
+                  <option value="Bizerte">Bizerte</option>
+                  <option value="Béja">Béja</option>
+                  <option value="Jendouba">Jendouba</option>
+                  <option value="Kef">Kef</option>
+                  <option value="Siliana">Siliana</option>
+                  <option value="Sousse">Sousse</option>
+                  <option value="Monastir">Monastir</option>
+                  <option value="Mahdia">Mahdia</option>
+                  <option value="Kairouan">Kairouan</option>
+                  <option value="Kasserine">Kasserine</option>
+                  <option value="Sidi Bouzid">Sidi Bouzid</option>
+                  <option value="Sfax">Sfax</option>
+                  <option value="Gabès">Gabès</option>
+                  <option value="Medenine">Medenine</option>
+                  <option value="Tozeur">Tozeur</option>
+                  <option value="Kebili">Kebili</option>
+                  <option value="Gafsa">Gafsa</option>
+                  <option value="Tataouine">Tataouine</option>
+                </select>
+                <div *ngIf="shippingState?.invalid && shippingState?.touched" class="text-xs text-red-600 mt-1">
+                  Governorate is required
+                </div>
+              </div>
+              
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Postal Code *</label>
+                <input
+                  formControlName="shippingZipCode"
+                  type="text"
+                  placeholder="1000"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-black"
+                  [class.border-red-500]="shippingZipCode?.invalid && shippingZipCode?.touched"
+                >
+                <div *ngIf="shippingZipCode?.invalid && shippingZipCode?.touched" class="text-xs text-red-600 mt-1">
+                  Postal code is required
+                </div>
+              </div>
+            </div>
+
+            <div class="mb-4">
+              <label class="block text-sm font-medium text-gray-700 mb-1">Country</label>
+              <input
+                formControlName="shippingCountry"
+                type="text"
+                value="Tunisia"
+                readonly
+                class="w-full px-3 py-2 border border-gray-300 rounded-sm bg-gray-50 text-gray-700"
+              >
+            </div>
+
+            <div class="mb-4">
+              <label class="block text-sm font-medium text-gray-700 mb-1">Phone Number *</label>
+              <div class="flex gap-2">
+                <select class="px-3 py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-black bg-gray-50">
+                  <option value="+216">🇹🇳 +216</option>
+                </select>
+                <input
+                  formControlName="shippingPhone"
+                  type="tel"
+                  placeholder="XX XXX XXX"
+                  class="flex-1 px-3 py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-black"
+                  [class.border-red-500]="shippingPhone?.invalid && shippingPhone?.touched"
+                >
+              </div>
+              <div *ngIf="shippingPhone?.invalid && shippingPhone?.touched" class="text-xs text-red-600 mt-1">
+                Valid Tunisian phone number required (8 digits)
+              </div>
+            </div>
+
+            <div class="flex justify-end">
+              <button
+                type="button"
+                (click)="nextStep()"
+                class="bg-black text-white px-6 py-2 text-sm font-medium hover:bg-gray-800 transition-colors"
+              >
+                Continue to Payment
+              </button>
+            </div>
+          </div>
+
+          <!-- Step 2: Payment Method -->
+          <div *ngIf="currentStep === 2" class="bg-white p-6 rounded-lg border border-gray-200">
+            <h2 class="text-xl font-bold mb-6">Payment Method</h2>
+            
+            <!-- Billing Address (if different from shipping) -->
+            <div class="mb-6">
+              <div class="flex items-center mb-4">
+                <input
+                  type="checkbox"
+                  formControlName="sameAsShipping"
+                  class="mr-2"
+                >
+                <label class="text-sm font-medium text-gray-700">Billing address same as shipping</label>
+              </div>
+            </div>
+
+            <!-- Billing Address Fields (when different) -->
+            <div *ngIf="!sameAsShipping?.value" class="mb-6 p-4 bg-gray-50 rounded-lg">
+              <h3 class="font-medium mb-4">Billing Address</h3>
+              
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">First Name *</label>
+                  <input
+                    formControlName="billingFirstName"
+                    type="text"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-black"
+                    [class.border-red-500]="billingFirstName?.invalid && billingFirstName?.touched"
+                  >
+                  <div *ngIf="billingFirstName?.invalid && billingFirstName?.touched" class="text-xs text-red-600 mt-1">
+                    First name is required
+                  </div>
+                </div>
+                
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">Last Name *</label>
+                  <input
+                    formControlName="billingLastName"
+                    type="text"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-black"
+                    [class.border-red-500]="billingLastName?.invalid && billingLastName?.touched"
+                  >
+                  <div *ngIf="billingLastName?.invalid && billingLastName?.touched" class="text-xs text-red-600 mt-1">
+                    Last name is required
+                  </div>
+                </div>
+              </div>
+
+              <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700 mb-1">Street Address *</label>
+                <input
+                  formControlName="billingStreet"
+                  type="text"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-black"
+                  [class.border-red-500]="billingStreet?.invalid && billingStreet?.touched"
+                >
+                <div *ngIf="billingStreet?.invalid && billingStreet?.touched" class="text-xs text-red-600 mt-1">
+                  Street address is required
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">City *</label>
+                  <input
+                    formControlName="billingCity"
+                    type="text"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-black"
+                    [class.border-red-500]="billingCity?.invalid && billingCity?.touched"
+                  >
+                  <div *ngIf="billingCity?.invalid && billingCity?.touched" class="text-xs text-red-600 mt-1">
+                    City is required
+                  </div>
+                </div>
+                
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">Governorate *</label>
+                  <select
+                    formControlName="billingState"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-black"
+                    [class.border-red-500]="billingState?.invalid && billingState?.touched"
+                  >
+                    <option value="">Select Governorate</option>
+                    <option value="Tunis">Tunis</option>
+                    <option value="Ariana">Ariana</option>
+                    <option value="Ben Arous">Ben Arous</option>
+                    <option value="Manouba">Manouba</option>
+                    <option value="Nabeul">Nabeul</option>
+                    <option value="Zaghouan">Zaghouan</option>
+                    <option value="Bizerte">Bizerte</option>
+                    <option value="Béja">Béja</option>
+                    <option value="Jendouba">Jendouba</option>
+                    <option value="Kef">Kef</option>
+                    <option value="Siliana">Siliana</option>
+                    <option value="Sousse">Sousse</option>
+                    <option value="Monastir">Monastir</option>
+                    <option value="Mahdia">Mahdia</option>
+                    <option value="Kairouan">Kairouan</option>
+                    <option value="Kasserine">Kasserine</option>
+                    <option value="Sidi Bouzid">Sidi Bouzid</option>
+                    <option value="Sfax">Sfax</option>
+                    <option value="Gabès">Gabès</option>
+                    <option value="Medenine">Medenine</option>
+                    <option value="Tozeur">Tozeur</option>
+                    <option value="Kebili">Kebili</option>
+                    <option value="Gafsa">Gafsa</option>
+                    <option value="Tataouine">Tataouine</option>
+                  </select>
+                  <div *ngIf="billingState?.invalid && billingState?.touched" class="text-xs text-red-600 mt-1">
+                    Governorate is required
+                  </div>
+                </div>
+                
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">Postal Code *</label>
+                  <input
+                    formControlName="billingZipCode"
+                    type="text"
+                    placeholder="1000"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-black"
+                    [class.border-red-500]="billingZipCode?.invalid && billingZipCode?.touched"
+                  >
+                  <div *ngIf="billingZipCode?.invalid && billingZipCode?.touched" class="text-xs text-red-600 mt-1">
+                    Postal code is required
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Payment Type Selection -->
+            <div class="mb-6">
+              <div class="space-y-3">
+                <label class="flex items-center p-3 border border-gray-300 rounded-sm cursor-pointer hover:bg-gray-50">
+                  <input
+                    type="radio"
+                    formControlName="paymentType"
+                    value="card"
+                    class="mr-3"
+                  >
+                  <span class="font-medium">Credit/Debit Card</span>
+                </label>
+                
+                <label class="flex items-center p-3 border border-gray-300 rounded-sm cursor-pointer hover:bg-gray-50">
+                  <input
+                    type="radio"
+                    formControlName="paymentType"
+                    value="paypal"
+                    class="mr-3"
+                  >
+                  <span class="font-medium">PayPal</span>
+                </label>
+                
+                <label class="flex items-center p-3 border border-gray-300 rounded-sm cursor-pointer hover:bg-gray-50">
+                  <input
+                    type="radio"
+                    formControlName="paymentType"
+                    value="cash"
+                    class="mr-3"
+                  >
+                  <span class="font-medium">Cash on Delivery</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Card Details -->
+            <div *ngIf="paymentType?.value === 'card'" class="space-y-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Card Number *</label>
+                <input
+                  formControlName="cardNumber"
+                  type="text"
+                  placeholder="1234 5678 9012 3456"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-black"
+                  [class.border-red-500]="cardNumber?.invalid && cardNumber?.touched"
+                >
+                <div *ngIf="cardNumber?.invalid && cardNumber?.touched" class="text-xs text-red-600 mt-1">
+                  Valid card number required
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Cardholder Name *</label>
+                <input
+                  formControlName="cardName"
+                  type="text"
+                  placeholder="John Doe"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-black"
+                  [class.border-red-500]="cardName?.invalid && cardName?.touched"
+                >
+                <div *ngIf="cardName?.invalid && cardName?.touched" class="text-xs text-red-600 mt-1">
+                  Cardholder name is required
+                </div>
+              </div>
+
+              <div class="grid grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">Expiry Date *</label>
+                  <input
+                    formControlName="expiryDate"
+                    type="text"
+                    placeholder="MM/YY"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-black"
+                    [class.border-red-500]="expiryDate?.invalid && expiryDate?.touched"
+                  >
+                  <div *ngIf="expiryDate?.invalid && expiryDate?.touched" class="text-xs text-red-600 mt-1">
+                    Valid expiry date required
+                  </div>
+                </div>
+                
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">CVV *</label>
+                  <input
+                    formControlName="cvv"
+                    type="text"
+                    placeholder="123"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-black"
+                    [class.border-red-500]="cvv?.invalid && cvv?.touched"
+                  >
+                  <div *ngIf="cvv?.invalid && cvv?.touched" class="text-xs text-red-600 mt-1">
+                    CVV is required
+                  </div>
+                </div>
+              </div>
+
+              <div class="flex items-center">
+                <input
+                  type="checkbox"
+                  formControlName="saveCard"
+                  class="mr-2"
+                >
+                <label class="text-sm text-gray-700">Save card for future purchases</label>
+              </div>
+            </div>
+
+            <!-- PayPal Info -->
+            <div *ngIf="paymentType?.value === 'paypal'" class="p-4 bg-blue-50 border border-blue-200 rounded-sm">
+              <p class="text-sm text-blue-800">You will be redirected to PayPal to complete your payment.</p>
+            </div>
+
+            <!-- Cash on Delivery Info -->
+            <div *ngIf="paymentType?.value === 'cash'" class="p-4 bg-yellow-50 border border-yellow-200 rounded-sm">
+              <p class="text-sm text-yellow-800">Pay with cash when your order is delivered.</p>
+            </div>
+
+            <div class="flex justify-between mt-6">
+              <button
+                type="button"
+                (click)="previousStep()"
+                class="text-gray-600 hover:text-black transition-colors"
+              >
+                ← Back to Shipping
+              </button>
+              <button
+                type="button"
+                (click)="nextStep()"
+                class="bg-black text-white px-6 py-2 text-sm font-medium hover:bg-gray-800 transition-colors"
+              >
+                Review Order
+              </button>
+            </div>
+          </div>
+
+          <!-- Step 3: Review Order -->
+          <div *ngIf="currentStep === 3" class="bg-white p-6 rounded-lg border border-gray-200">
+            <h2 class="text-xl font-bold mb-6">Review Your Order</h2>
+            
+            <!-- Order Items -->
+            <div class="mb-6">
+              <h3 class="font-medium mb-4">Order Items ({{ cartItems.length }})</h3>
+              <div class="space-y-3">
+                <div *ngFor="let item of cartItems" class="flex items-center gap-4 pb-3 border-b">
+                  <img [src]="item.product.image" [alt]="item.product.name" class="w-16 h-16 object-cover rounded">
+                  <div class="flex-1">
+                    <h4 class="font-medium">{{ item.product.name }}</h4>
+                    <p class="text-sm text-gray-600">Qty: {{ item.quantity }}</p>
+                  </div>
+                  <div class="text-right">
+                    <p class="font-medium">${{ item.product.price * item.quantity }}</p>
+                    <p class="text-xs text-gray-600">${{ item.product.price }} each</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Shipping Address -->
+            <div class="mb-6">
+              <h3 class="font-medium mb-2">Shipping Address</h3>
+              <p class="text-sm text-gray-600">
+                {{ checkoutForm.get('shippingFirstName')?.value }} {{ checkoutForm.get('shippingLastName')?.value }}<br>
+                {{ checkoutForm.get('shippingStreet')?.value }}<br>
+                <span *ngIf="checkoutForm.get('shippingApartment')?.value">
+                  {{ checkoutForm.get('shippingApartment')?.value }}<br>
+                </span>
+                {{ checkoutForm.get('shippingCity')?.value }}, {{ checkoutForm.get('shippingState')?.value }} {{ checkoutForm.get('shippingZipCode')?.value }}<br>
+                {{ checkoutForm.get('shippingPhone')?.value }}
+              </p>
+            </div>
+
+            <!-- Payment Method -->
+            <div class="mb-6">
+              <h3 class="font-medium mb-2">Payment Method</h3>
+              <p class="text-sm text-gray-600">
+                <span *ngIf="paymentType?.value === 'card'">
+                  Card ending in ****{{ cardNumber?.value?.slice(-4) || '0000' }}
+                </span>
+                <span *ngIf="paymentType?.value === 'paypal'">PayPal</span>
+                <span *ngIf="paymentType?.value === 'cash'">Cash on Delivery</span>
+              </p>
+            </div>
+
+            <!-- Order Notes -->
+            <div class="mb-6">
+              <label class="block text-sm font-medium text-gray-700 mb-1">Order Notes (Optional)</label>
+              <textarea
+                formControlName="orderNotes"
+                rows="3"
+                class="w-full px-3 py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-black"
+                placeholder="Special instructions for your order..."
+              ></textarea>
+            </div>
+
+            <div class="flex justify-between">
+              <button
+                type="button"
+                (click)="previousStep()"
+                class="text-gray-600 hover:text-black transition-colors"
+              >
+                ← Back to Payment
+              </button>
+              <button
+                type="button"
+                (click)="placeOrder()"
+                [disabled]="isLoading"
+                class="bg-black text-white px-6 py-2 text-sm font-medium hover:bg-gray-800 transition-colors disabled:opacity-50"
+              >
+                <span *ngIf="!isLoading">Place Order</span>
+                <span *ngIf="isLoading" class="flex items-center">
+                  <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  Processing...
+                </span>
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <!-- Order Summary -->
+      <div class="lg:col-span-1">
+        <div class="bg-white p-6 rounded-lg border border-gray-200 sticky top-24">
+          <h3 class="text-lg font-bold mb-4">Order Summary</h3>
+          
+          <div class="space-y-2 mb-4">
+            <div class="flex justify-between text-sm">
+              <span>Subtotal ({{ cartItems.length }} items)</span>
+              <span>${{ orderTotals.subtotal.toFixed(2) }}</span>
+            </div>
+            <div class="flex justify-between text-sm">
+              <span>Shipping</span>
+              <span>{{ orderTotals.shipping === 0 ? 'FREE' : '$' + orderTotals.shipping.toFixed(2) }}</span>
+            </div>
+            <div class="flex justify-between text-sm">
+              <span>Tax</span>
+              <span>${{ orderTotals.tax.toFixed(2) }}</span>
+            </div>
+            <div class="border-t pt-2 mt-2">
+              <div class="flex justify-between font-bold">
+                <span>Total</span>
+                <span>${{ orderTotals.total.toFixed(2) }}</span>
+              </div>
+            </div>
+          </div>
+
+          <div *ngIf="orderTotals.shipping === 0" class="mb-4 p-3 bg-green-50 border border-green-200 rounded-sm">
+            <p class="text-xs text-green-800">🎉 Free shipping on orders over $100!</p>
+          </div>
+
+          <div class="mb-4 p-3 bg-gray-50 border border-gray-200 rounded-sm">
+            <p class="text-xs text-gray-600">
+              <strong>Estimated Delivery:</strong><br>
+              {{ (orderTotals.subtotal >= 100 ? '5-7' : '3-5') }} business days
+            </p>
+          </div>
+
+          <div class="text-xs text-gray-500">
+            <p>By placing this order, you agree to our Terms of Service and Privacy Policy.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

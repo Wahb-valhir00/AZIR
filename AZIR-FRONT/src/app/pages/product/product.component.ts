@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { ProductService } from '../../services/product.service';
+import { CartService } from '../../services/cart.service';
 import { Product } from '../../models/product.model';
 import { NavbarComponent } from '../../components/navbar/navbar.component';
 import { FooterComponent } from '../../components/footer/footer.component';
@@ -18,11 +19,14 @@ export class ProductComponent implements OnInit {
   relatedProducts: Product[] = [];
   currentImageIndex: number = 0;
   Math = Math; // Expose Math for template
+  quantity: number = 1;
+  addedToCart: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private productService: ProductService
+    private productService: ProductService,
+    private cartService: CartService
   ) {}
 
   ngOnInit() {
@@ -52,5 +56,23 @@ export class ProductComponent implements OnInit {
 
   goBack() {
     this.router.navigate(['/']);
+  }
+
+  addToCart() {
+    if (this.product) {
+      this.cartService.addToCart(this.product.id, this.quantity);
+      this.addedToCart = true;
+      setTimeout(() => {
+        this.addedToCart = false;
+      }, 2000);
+    }
+  }
+
+  updateQuantity(action: 'increase' | 'decrease') {
+    if (action === 'increase') {
+      this.quantity++;
+    } else if (action === 'decrease' && this.quantity > 1) {
+      this.quantity--;
+    }
   }
 }

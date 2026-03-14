@@ -16,7 +16,21 @@
     <!-- Filter and Sort Header -->
     <div class="max-w-7xl mx-auto px-4">
       <div class="flex justify-between items-center mb-12 text-[11px] uppercase tracking-widest text-gray-500 font-bold">
-        <span>{{ filteredProducts.length }} Products</span>
+        <div class="flex items-center gap-4">
+          <button
+            (click)="toggleFilters()"
+            class="hover:text-black transition-colors flex items-center gap-2"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="4" x2="20" y1="4" y2="4"/>
+              <line x1="4" x2="20" y1="11" y2="11"/>
+              <line x1="4" x2="20" y1="18" y2="18"/>
+            </svg>
+            Filters
+          </button>
+          <span>{{ filteredProducts.length }} Products</span>
+        </div>
+        
         <div class="flex gap-8">
           <button
             class="hover:text-black transition-colors"
@@ -46,45 +60,139 @@
           >
             Highest Rated
           </button>
+          <button
+            class="hover:text-black transition-colors"
+            [class.text-black]="sortBy === 'name-asc'"
+            (click)="sortProducts('name-asc')"
+          >
+            Name: A-Z
+          </button>
         </div>
       </div>
 
-      <!-- Product Grid -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-12">
-        <div
-          class="group cursor-pointer"
-          *ngFor="let product of filteredProducts"
-          (click)="navigateToProduct(product.id)"
+      <!-- Filters Sidebar -->
+      <div class="flex gap-8">
+        <!-- Filter Panel -->
+        <div 
+          *ngIf="showFilters"
+          class="w-80 bg-white p-6 rounded-lg border border-gray-200 h-fit sticky top-24"
         >
-          <div class="relative aspect-[3/4] overflow-hidden bg-gray-50 mb-6">
-            <img
-              [src]="product.image"
-              [alt]="product.name"
-              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000 ease-out"
-            />
-            <div class="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors"></div>
-            <div
-              class="absolute inset-x-0 bottom-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out">
-              <button
-                class="w-full bg-white/95 backdrop-blur-sm py-3 uppercase text-[10px] tracking-[0.2em] font-bold hover:bg-black hover:text-white transition-all shadow-xl">
-                Quick Add — ${{ product.price }}
-              </button>
+          <div class="flex justify-between items-center mb-6">
+            <h3 class="text-sm font-bold uppercase tracking-wider">Filters</h3>
+            <button 
+              (click)="resetFilters()"
+              class="text-xs text-gray-500 hover:text-black transition-colors"
+            >
+              Reset All
+            </button>
+          </div>
+
+          <!-- Price Range Filter -->
+          <div class="mb-8">
+            <h4 class="text-xs font-bold uppercase tracking-wider mb-4 text-gray-600">Price Range</h4>
+            <div class="space-y-4">
+              <div class="flex justify-between items-center">
+                <span class="text-sm text-gray-600">$0</span>
+                <span class="text-sm font-bold">${{ priceRange }}</span>
+              </div>
+              <input
+                type="range"
+                min="0"
+                max="200"
+                step="10"
+                [(ngModel)]="priceRange"
+                (input)="applyFilters()"
+                class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-black"
+              />
             </div>
           </div>
 
-          <div class="space-y-1 text-center">
-            <p class="text-[9px] uppercase tracking-[0.3em] text-gray-400 font-bold">
-              {{ product.category }}
-            </p>
-            <h3 class="text-base font-medium text-gray-900 group-hover:text-[#D4AF37] transition-colors">
-              {{ product.name }}
-            </h3>
-            <p class="text-sm text-gray-500 font-light">${{ product.price }}</p>
+          <!-- Rating Filter -->
+          <div class="mb-8">
+            <h4 class="text-xs font-bold uppercase tracking-wider mb-4 text-gray-600">Minimum Rating</h4>
+            <div class="space-y-2">
+              <label class="flex items-center gap-3 cursor-pointer hover:bg-gray-50 p-2 rounded">
+                <input
+                  type="radio"
+                  name="rating"
+                  [value]="0"
+                  [(ngModel)]="minRating"
+                  (change)="applyFilters()"
+                  class="w-4 h-4 text-black"
+                />
+                <span class="text-sm">All Ratings</span>
+              </label>
+              <label class="flex items-center gap-3 cursor-pointer hover:bg-gray-50 p-2 rounded">
+                <input
+                  type="radio"
+                  name="rating"
+                  [value]="4"
+                  [(ngModel)]="minRating"
+                  (change)="applyFilters()"
+                  class="w-4 h-4 text-black"
+                />
+                <span class="text-sm flex items-center gap-1">
+                  4+ Stars
+                  <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="currentColor" class="text-[#D4AF37]">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                  </svg>
+                </span>
+              </label>
+              <label class="flex items-center gap-3 cursor-pointer hover:bg-gray-50 p-2 rounded">
+                <input
+                  type="radio"
+                  name="rating"
+                  [value]="4.5"
+                  [(ngModel)]="minRating"
+                  (change)="applyFilters()"
+                  class="w-4 h-4 text-black"
+                />
+                <span class="text-sm flex items-center gap-1">
+                  4.5+ Stars
+                  <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="currentColor" class="text-[#D4AF37]">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                  </svg>
+                </span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Products Grid -->
+        <div class="flex-1">
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div 
+              *ngFor="let product of filteredProducts" 
+              class="group cursor-pointer"
+              (click)="navigateToProduct(product.id)"
+            >
+              <div class="aspect-[4/5] bg-gray-50 overflow-hidden rounded-sm mb-6 product-image-container">
+                <img
+                  [src]="product.image"
+                  [alt]="product.name"
+                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                />
+              </div>
+              <div class="space-y-2">
+                <h3 class="font-medium text-sm group-hover:text-[#D4AF37] transition-colors">{{ product.name }}</h3>
+                <p class="text-xs text-gray-500 uppercase tracking-wider">{{ product.category }}</p>
+                <div class="flex items-center justify-between">
+                  <p class="font-bold text-sm">${{ product.price }}</p>
+                  <div class="flex items-center gap-1">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="currentColor" class="text-[#D4AF37]">
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                    </svg>
+                    <span class="text-xs text-gray-600">{{ product.rating }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
+
+      </div>
 
   <app-footer></app-footer>
 </div>

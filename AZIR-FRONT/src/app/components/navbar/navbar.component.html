@@ -11,20 +11,100 @@
     </div>
 
     <div
-      class="text-3xl font-bold tracking-[0.3em] text-black cursor-pointer hover:opacity-70 transition-opacity"
+      class="cursor-pointer hover:opacity-70 transition-opacity"
       (click)="navigateHome()"
     >
-      AZIR
+      <img 
+        src="logo.jpeg" 
+        alt="AZIR Logo" 
+        class="h-8 w-auto object-contain"
+      />
     </div>
 
     <div class="flex items-center gap-6">
-      <button
-        class="hidden sm:block text-[11px] font-bold uppercase tracking-[0.2em] text-gray-500 hover:text-black transition-colors"
+      <!-- Search Icon -->
+      <button 
+        (click)="openSearch()"
+        class="p-2 group hover:bg-gray-100 rounded-full transition-colors"
       >
-        Assistant
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+             fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+             stroke-linejoin="round" class="group-hover:scale-110 transition-transform">
+          <circle cx="11" cy="11" r="8"/>
+          <path d="m21 21-4.35-4.35"/>
+        </svg>
       </button>
 
-      <button class="relative p-2 group">
+      <!-- Auth Section -->
+      <div *ngIf="!isAuthenticated" class="hidden md:flex items-center gap-4">
+        <button
+          (click)="navigateToLogin()"
+          class="text-[11px] font-bold uppercase tracking-[0.2em] text-gray-500 hover:text-black transition-colors"
+        >
+          Sign In
+        </button>
+        <button
+          (click)="navigateToSignup()"
+          class="bg-black text-white px-4 py-2 text-[11px] font-bold uppercase tracking-[0.2em] hover:bg-gray-800 transition-colors"
+        >
+          Create Account
+        </button>
+      </div>
+
+      <!-- User Menu (when logged in) -->
+      <div *ngIf="isAuthenticated" class="relative group">
+        <button class="flex items-center gap-2 p-2 hover:bg-gray-100 rounded-full transition-colors">
+          <div class="w-8 h-8 bg-black text-white rounded-full flex items-center justify-center text-xs font-bold">
+            {{ getUserInitials() }}
+          </div>
+          <span class="hidden md:block text-sm font-medium">{{ getUserDisplayName() }}</span>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="m6 9 6 6 6-6"/>
+          </svg>
+        </button>
+        
+        <!-- Dropdown Menu -->
+        <div class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+          <div class="py-2">
+            <button
+              (click)="navigateToProfile()"
+              class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+            >
+              My Profile
+            </button>
+            <button
+              class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+            >
+              Order History
+            </button>
+            <button
+              class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+            >
+              Wishlist
+            </button>
+            <hr class="my-2 border-gray-200">
+            <button
+              (click)="logout()"
+              class="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
+            >
+              Sign Out
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mobile Auth (when not logged in) -->
+      <div *ngIf="!isAuthenticated && false" class="md:hidden">
+        <button
+          (click)="navigateToLogin()"
+          class="text-[11px] font-bold uppercase tracking-[0.2em] text-gray-500 hover:text-black transition-colors"
+        >
+          Account
+        </button>
+      </div>
+
+      <!-- Cart Icon -->
+      <button class="relative p-2 group" (click)="toggleCart()">
         <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24"
              fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
              stroke-linejoin="round" class="group-hover:scale-110 transition-transform">
@@ -32,7 +112,20 @@
           <path d="M3 6h18"/>
           <path d="M16 10a4 4 0 0 1-8 0"/>
         </svg>
+        
+        <!-- Cart count badge -->
+        <div 
+          *ngIf="cartCount > 0"
+          class="absolute -top-1 -right-1 bg-black text-white text-[10px] font-bold rounded-full h-5 w-5 flex items-center justify-center animate-pulse">
+          {{ cartCount }}
+        </div>
       </button>
     </div>
   </div>
 </nav>
+
+<!-- Search Modal -->
+<app-search-modal></app-search-modal>
+
+<!-- Cart Modal -->
+<app-cart-modal></app-cart-modal>

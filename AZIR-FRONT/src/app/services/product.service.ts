@@ -15,7 +15,7 @@ export class ProductService {
       longDescription: 'The Luminous Silk Serum is AZIR\'s flagship hydration miracle. Engineered with triple-weight hyaluronic acid and gold-leaf micro-particles, it penetrates deep into the epidermis to provide 72-hour moisture while reflecting light for an immediate ethereal glow.',
       ingredients: ['Hyaluronic Acid', '24K Gold Micro-flakes', 'Rosehip Oil', 'Niacinamide'],
       usage: 'Apply 2-3 drops to clean, damp skin. Gently press into the face and neck until absorbed. Follow with moisturizer.',
-      image: 'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?auto=format&fit=crop&q=80&w=800',
+      image: 'product1.webp',
       rating: 4.9,
       reviews: [
         { user: 'Isabella R.', rating: 5, comment: 'Literally changed my skin texture overnight.', date: '2024-05-12' }

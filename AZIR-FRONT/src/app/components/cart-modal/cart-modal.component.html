@@ -1,0 +1,126 @@
+<!-- Backdrop -->
+<div 
+  *ngIf="isOpen" 
+  class="fixed inset-0 bg-black/50 z-50 flex justify-end"
+  (click)="close()"
+>
+  <!-- Cart Panel -->
+  <div 
+    class="bg-white w-full max-w-md h-full overflow-y-auto shadow-2xl"
+    (click)="$event.stopPropagation()"
+  >
+    <!-- Header -->
+    <div class="sticky top-0 bg-white border-b border-gray-200 p-6 flex items-center justify-between">
+      <h2 class="text-2xl font-bold tracking-tight">Shopping Cart</h2>
+      <button 
+        (click)="close()"
+        class="p-2 hover:bg-gray-100 rounded-full transition-colors"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" 
+             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18 6 6 18M6 6l12 12"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Cart Items -->
+    <div class="p-6">
+      <div *ngIf="cartItems.length === 0" class="text-center py-12">
+        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" 
+             fill="none" stroke="currentColor" stroke-width="1.5" class="mx-auto mb-4 text-gray-300">
+          <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/>
+          <path d="M3 6h18"/>
+          <path d="M16 10a4 4 0 0 1-8 0"/>
+        </svg>
+        <p class="text-gray-500 mb-4">Your cart is empty</p>
+        <button 
+          (click)="close()"
+          class="bg-black text-white px-6 py-2 text-sm uppercase tracking-[0.2em] font-bold hover:bg-gray-800 transition-colors"
+        >
+          Continue Shopping
+        </button>
+      </div>
+
+      <div *ngIf="cartItems.length > 0" class="space-y-6">
+        <!-- Cart Item -->
+        <div 
+          *ngFor="let item of cartItems" 
+          class="flex gap-4 pb-6 border-b border-gray-200 last:border-0"
+        >
+          <!-- Product Image -->
+          <img 
+            [src]="item.product.image" 
+            [alt]="item.product.name"
+            class="w-20 h-20 object-cover rounded-lg"
+          />
+
+          <!-- Product Details -->
+          <div class="flex-1">
+            <h3 class="font-semibold text-sm mb-1">{{ item.product.name }}</h3>
+            <p class="text-gray-500 text-xs mb-2">{{ item.product.category }}</p>
+            <p class="font-bold text-sm">${{ item.product.price }}</p>
+          </div>
+
+          <!-- Quantity Controls -->
+          <div class="flex flex-col items-end gap-2">
+            <div class="flex items-center gap-2 border border-gray-300 rounded">
+              <button 
+                (click)="updateQuantity(item.productId, item.quantity - 1)"
+                class="p-1 hover:bg-gray-100 transition-colors"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" 
+                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M5 12h14"/>
+                </svg>
+              </button>
+              <span class="px-3 py-1 text-sm font-medium min-w-[40px] text-center">{{ item.quantity }}</span>
+              <button 
+                (click)="updateQuantity(item.productId, item.quantity + 1)"
+                class="p-1 hover:bg-gray-100 transition-colors"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" 
+                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 5v14M5 12h14"/>
+                </svg>
+              </button>
+            </div>
+            
+            <button 
+              (click)="removeFromCart(item.productId)"
+              class="text-xs text-red-600 hover:text-red-800 transition-colors"
+            >
+              Remove
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div *ngIf="cartItems.length > 0" class="sticky bottom-0 bg-white border-t border-gray-200 p-6 space-y-4">
+      <!-- Clear Cart -->
+      <div class="flex justify-between items-center">
+        <button 
+          (click)="clearCart()"
+          class="text-sm text-gray-600 hover:text-red-600 transition-colors"
+        >
+          Clear Cart
+        </button>
+        
+        <!-- Total -->
+        <div class="text-right">
+          <p class="text-sm text-gray-600">Total</p>
+          <p class="text-2xl font-bold">${{ totalPrice.toFixed(2) }}</p>
+        </div>
+      </div>
+
+      <!-- Checkout Button -->
+      <button 
+        (click)="checkout()"
+        class="w-full bg-black text-white py-4 text-sm uppercase tracking-[0.2em] font-bold hover:bg-gray-800 transition-colors"
+      >
+        Proceed to Checkout
+      </button>
+    </div>
+  </div>
+</div>

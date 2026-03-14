@@ -53,12 +53,39 @@
             {{ product.longDescription }}
           </p>
 
+          <!-- Quantity Selector -->
+          <div class="flex items-center gap-6 mb-8">
+            <span class="text-[10px] uppercase tracking-[0.4em] text-gray-400 font-bold">Quantity</span>
+            <div class="flex items-center border border-black/10 rounded-sm">
+              <button 
+                (click)="updateQuantity('decrease')"
+                class="px-4 py-3 hover:bg-gray-100 transition-colors"
+              >
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M5 12h14"/>
+                </svg>
+              </button>
+              <span class="px-6 py-3 text-sm font-medium min-w-[60px] text-center">{{ quantity }}</span>
+              <button 
+                (click)="updateQuantity('increase')"
+                class="px-4 py-3 hover:bg-gray-100 transition-colors"
+              >
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 5v14M5 12h14"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+
           <!-- Add to Cart Buttons -->
           <div class="flex flex-col sm:flex-row gap-4 mb-20">
             <button
-              class="flex-1 bg-black text-white py-6 uppercase text-xs tracking-[0.4em] font-bold hover:bg-[#D4AF37] transition-all duration-500 hover:scale-[1.02] active:scale-[0.98] shadow-2xl"
+              (click)="addToCart()"
+              [class.bg-[#D4AF37]]="addedToCart"
+              [class.hover:bg-black]="!addedToCart"
+              class="flex-1 bg-black text-white py-6 uppercase text-xs tracking-[0.4em] font-bold transition-all duration-500 hover:scale-[1.02] active:scale-[0.98] shadow-2xl"
             >
-              Add to Bag
+              {{ addedToCart ? '✓ Added to Bag' : 'Add to Bag' }}
             </button>
             <button class="flex-1 border border-black/10 py-6 uppercase text-xs tracking-[0.4em] font-bold hover:bg-black hover:text-white transition-all duration-500">
               Wishlist
