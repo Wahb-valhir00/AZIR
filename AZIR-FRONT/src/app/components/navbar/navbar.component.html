@@ -1,13 +1,26 @@
 <nav class="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100">
   <div class="max-w-7xl mx-auto px-4 h-20 flex items-center justify-between">
     <div class="hidden md:flex gap-8 text-[11px] font-bold uppercase tracking-[0.2em] text-gray-500">
+      <!-- Loading state -->
+      <div *ngIf="isLoadingCategories" class="flex gap-8">
+        <div class="animate-pulse bg-gray-300 h-4 w-16 rounded"></div>
+        <div class="animate-pulse bg-gray-300 h-4 w-16 rounded"></div>
+        <div class="animate-pulse bg-gray-300 h-4 w-16 rounded"></div>
+      </div>
+      
+      <!-- Dynamic categories -->
       <button
         class="hover:text-black transition-colors"
         *ngFor="let cat of categories"
         (click)="navigateToCategory(cat)"
       >
-        {{ cat }}
+        {{ cat.name }}
       </button>
+      
+      <!-- No categories state -->
+      <div *ngIf="!isLoadingCategories && categories.length === 0" class="text-gray-400">
+        No categories available
+      </div>
     </div>
 
     <div

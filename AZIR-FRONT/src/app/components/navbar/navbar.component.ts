@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { CartService } from '../../services/cart.service';
 import { SearchService } from '../../services/search.service';
 import { AuthService } from '../../services/auth.service';
+import { CategoryService, Category } from '../../services/category.service';
 import { CartModalComponent } from '../cart-modal/cart-modal.component';
 import { SearchModalComponent } from '../search-modal/search-modal.component';
 import { Subscription } from 'rxjs';
@@ -16,20 +17,23 @@ import { Subscription } from 'rxjs';
   styleUrl: './navbar.component.css'
 })
 export class NavbarComponent implements OnInit, OnDestroy {
-  categories = ['Skincare', 'Makeup', 'Fragrance'] as const;
+  categories: Category[] = [];
   cartCount = 0;
   currentUser: any = null;
   isAuthenticated = false;
+  isLoadingCategories = false;
   
   private cartCountSubscription: Subscription | null = null;
   private authSubscription: Subscription | null = null;
+  private categorySubscription: Subscription | null = null;
   @ViewChild(CartModalComponent) cartModal!: CartModalComponent;
 
   constructor(
     private router: Router,
     private cartService: CartService,
     private searchService: SearchService,
-    private authService: AuthService
+    private authService: AuthService,
+    private categoryService: CategoryService
   ) {}
 
   ngOnInit() {
@@ -41,6 +45,17 @@ export class NavbarComponent implements OnInit, OnDestroy {
       this.currentUser = user;
       this.isAuthenticated = !!user;
     });
+
+    // Load dynamic categories from backend
+    this.categorySubscription = this.categoryService.categories$.subscribe(categories => {
+      this.categories = categories;
+    });
+
+    this.categoryService.loading$.subscribe(loading => {
+      this.isLoadingCategories = loading;
+    });
+
+    this.categoryService.getCategories().subscribe();
   }
 
   ngOnDestroy() {
@@ -50,10 +65,13 @@ export class NavbarComponent implements OnInit, OnDestroy {
     if (this.authSubscription) {
       this.authSubscription.unsubscribe();
     }
+    if (this.categorySubscription) {
+      this.categorySubscription.unsubscribe();
+    }
   }
 
-  navigateToCategory(category: string) {
-    this.router.navigate(['/category', category.toLowerCase()]);
+  navigateToCategory(category: Category) {
+    this.router.navigate(['/category', category.name.toLowerCase()]);
   }
 
   navigateHome() {

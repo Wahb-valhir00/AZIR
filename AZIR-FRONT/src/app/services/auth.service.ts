@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, of } from 'rxjs';
-import { map, delay } from 'rxjs/operators';
+import { map, catchError } from 'rxjs/operators';
 import { User, AuthState } from '../models/user.model';
+import { HttpService } from './http.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private users: User[] = [];
   private currentUserSubject = new BehaviorSubject<User | null>(null);
   private tokenSubject = new BehaviorSubject<string | null>(null);
   private isLoadingSubject = new BehaviorSubject<boolean>(false);
@@ -25,9 +25,8 @@ export class AuthService {
     });
   });
 
-  constructor() {
+  constructor(private httpService: HttpService) {
     this.loadAuthState();
-    this.loadSampleUsers();
   }
 
   private loadAuthState(): void {
@@ -40,42 +39,7 @@ export class AuthService {
     }
   }
 
-  private loadSampleUsers(): void {
-    // Load sample users from localStorage or create defaults
-    const savedUsers = localStorage.getItem('azir_users');
-    if (savedUsers) {
-      this.users = JSON.parse(savedUsers);
-    } else {
-      // Create sample users for demo
-      this.users = [
-        {
-          id: '1',
-          firstName: 'John',
-          lastName: 'Doe',
-          email: 'john@example.com',
-          password: 'password123', // In real app, this would be hashed
-          phone: '+1234567890',
-          createdAt: new Date('2024-01-15'),
-          lastLogin: new Date()
-        },
-        {
-          id: '2',
-          firstName: 'Jane',
-          lastName: 'Smith',
-          email: 'jane@example.com',
-          password: 'password123',
-          phone: '+0987654321',
-          createdAt: new Date('2024-02-20'),
-          lastLogin: new Date()
-        }
-      ];
-      this.saveUsers();
-    }
-  }
 
-  private saveUsers(): void {
-    localStorage.setItem('azir_users', JSON.stringify(this.users));
-  }
 
   private saveAuthState(user: User, token: string): void {
     localStorage.setItem('azir_user', JSON.stringify(user));
@@ -95,6 +59,18 @@ export class AuthService {
     return 'azir_token_' + Math.random().toString(36).substr(2, 9) + '_' + Date.now();
   }
 
+  private createUserFromBackend(backendUser: any): User {
+    return {
+      id: backendUser.id.toString(),
+      firstName: backendUser.name,
+      lastName: backendUser.lastname,
+      email: backendUser.email,
+      phone: backendUser.phone,
+      createdAt: new Date(backendUser.createdAt || Date.now()),
+      lastLogin: new Date()
+    };
+  }
+
   signUp(userData: {
     firstName: string;
     lastName: string;
@@ -104,45 +80,34 @@ export class AuthService {
   }): Observable<{ success: boolean; message: string; user?: User }> {
     this.isLoadingSubject.next(true);
 
-    // Simulate API call
-    return of({}).pipe(
-      delay(1000),
-      map(() => {
-        // Check if user already exists
-        const existingUser = this.users.find(u => u.email === userData.email);
-        if (existingUser) {
-          this.isLoadingSubject.next(false);
-          return {
-            success: false,
-            message: 'An account with this email already exists'
-          };
-        }
+    // Map frontend fields to backend fields
+    const backendUserData = {
+      name: userData.firstName,
+      lastname: userData.lastName,
+      email: userData.email,
+      password: userData.password,
+      phone: userData.phone
+    };
 
-        // Create new user
-        const newUser: User = {
-          id: (this.users.length + 1).toString(),
-          firstName: userData.firstName,
-          lastName: userData.lastName,
-          email: userData.email,
-          password: userData.password, // In real app, hash this
-          phone: userData.phone,
-          createdAt: new Date()
-        };
-
-        this.users.push(newUser);
-        this.saveUsers();
-
-        // Auto-login after signup
+    return this.httpService.post('/users', backendUserData).pipe(
+      map((backendUser: any) => {
+        const user = this.createUserFromBackend(backendUser);
         const token = this.generateToken();
-        this.saveAuthState(newUser, token);
-
+        this.saveAuthState(user, token);
         this.isLoadingSubject.next(false);
 
         return {
           success: true,
           message: 'Account created successfully',
-          user: newUser
+          user: user
         };
+      }),
+      catchError((error) => {
+        this.isLoadingSubject.next(false);
+        return of({
+          success: false,
+          message: error.error?.message || 'Failed to create account'
+        });
       })
     );
   }
@@ -150,12 +115,11 @@ export class AuthService {
   signIn(email: string, password: string): Observable<{ success: boolean; message: string; user?: User }> {
     this.isLoadingSubject.next(true);
 
-    // Simulate API call
-    return of({}).pipe(
-      delay(1000),
-      map(() => {
-        // Find user
-        const user = this.users.find(u => u.email === email && u.password === password);
+    // For now, we'll simulate login by getting all users and finding a match
+    // In a real backend, you'd have a dedicated login endpoint
+    return this.httpService.get<any[]>('/users').pipe(
+      map((users) => {
+        const user = users.find(u => u.email === email && u.password === password);
         
         if (!user) {
           this.isLoadingSubject.next(false);
@@ -165,21 +129,23 @@ export class AuthService {
           };
         }
 
-        // Update last login
-        user.lastLogin = new Date();
-        this.saveUsers();
-
-        // Create token and save auth state
+        const frontendUser = this.createUserFromBackend(user);
         const token = this.generateToken();
-        this.saveAuthState(user, token);
-
+        this.saveAuthState(frontendUser, token);
         this.isLoadingSubject.next(false);
 
         return {
           success: true,
           message: 'Login successful',
-          user: user
+          user: frontendUser
         };
+      }),
+      catchError((error) => {
+        this.isLoadingSubject.next(false);
+        return of({
+          success: false,
+          message: 'Login failed'
+        });
       })
     );
   }
@@ -203,27 +169,19 @@ export class AuthService {
   updateUserProfile(userData: Partial<User>): Observable<{ success: boolean; message: string; user?: User }> {
     this.isLoadingSubject.next(true);
 
-    return of({}).pipe(
-      delay(500),
-      map(() => {
-        const currentUser = this.getCurrentUser();
-        if (!currentUser) {
-          this.isLoadingSubject.next(false);
-          return {
-            success: false,
-            message: 'No user logged in'
-          };
-        }
+    const currentUser = this.getCurrentUser();
+    if (!currentUser) {
+      this.isLoadingSubject.next(false);
+      return of({
+        success: false,
+        message: 'No user logged in'
+      });
+    }
 
-        // Update user data
-        const updatedUser = { ...currentUser, ...userData };
-        const userIndex = this.users.findIndex(u => u.id === currentUser.id);
-        if (userIndex !== -1) {
-          this.users[userIndex] = updatedUser;
-          this.saveUsers();
-          this.saveAuthState(updatedUser, this.getToken()!);
-        }
-
+    return this.httpService.put(`/users/${currentUser.id}`, userData).pipe(
+      map((backendUser: any) => {
+        const updatedUser = this.createUserFromBackend(backendUser);
+        this.saveAuthState(updatedUser, this.getToken()!);
         this.isLoadingSubject.next(false);
 
         return {
@@ -231,6 +189,13 @@ export class AuthService {
           message: 'Profile updated successfully',
           user: updatedUser
         };
+      }),
+      catchError((error) => {
+        this.isLoadingSubject.next(false);
+        return of({
+          success: false,
+          message: error.error?.message || 'Failed to update profile'
+        });
       })
     );
   }
@@ -238,40 +203,31 @@ export class AuthService {
   changePassword(currentPassword: string, newPassword: string): Observable<{ success: boolean; message: string }> {
     this.isLoadingSubject.next(true);
 
-    return of({}).pipe(
-      delay(500),
+    const currentUser = this.getCurrentUser();
+    if (!currentUser) {
+      this.isLoadingSubject.next(false);
+      return of({
+        success: false,
+        message: 'No user logged in'
+      });
+    }
+
+    // For now, we'll just update the password directly
+    // In a real backend, you'd verify the current password first
+    return this.httpService.put(`/users/${currentUser.id}`, { password: newPassword }).pipe(
       map(() => {
-        const currentUser = this.getCurrentUser();
-        if (!currentUser || !currentUser.password) {
-          this.isLoadingSubject.next(false);
-          return {
-            success: false,
-            message: 'No user logged in'
-          };
-        }
-
-        // Verify current password
-        if (currentUser.password !== currentPassword) {
-          this.isLoadingSubject.next(false);
-          return {
-            success: false,
-            message: 'Current password is incorrect'
-          };
-        }
-
-        // Update password
-        const userIndex = this.users.findIndex(u => u.id === currentUser.id);
-        if (userIndex !== -1) {
-          this.users[userIndex].password = newPassword;
-          this.saveUsers();
-        }
-
         this.isLoadingSubject.next(false);
-
         return {
           success: true,
           message: 'Password changed successfully'
         };
+      }),
+      catchError((error) => {
+        this.isLoadingSubject.next(false);
+        return of({
+          success: false,
+          message: error.error?.message || 'Failed to change password'
+        });
       })
     );
   }

@@ -1,0 +1,117 @@
+<div class="product-management">
+  <!-- Header -->
+  <div class="section-header">
+    <h2>📦 Product Management</h2>
+    <button class="btn btn-primary" (click)="createNewProduct()">
+      <span>➕</span> Add New Product
+    </button>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading">
+    <p>Loading products...</p>
+  </div>
+
+  <!-- Error Message -->
+  <div *ngIf="error" class="error-message">
+    <p>⚠️ {{ error }}</p>
+  </div>
+
+  <!-- Edit/Create Form -->
+  <div *ngIf="isEditing || isCreating" class="edit-form">
+    <div class="form-card">
+      <h3>{{ isCreating ? 'Create New Product' : 'Edit Product' }}</h3>
+      <form (ngSubmit)="saveProduct()">
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="name">Product Name</label>
+            <input type="text" id="name" [value]="selectedProduct?.name || ''" (input)="updateProductName($any($event.target).value)" required>
+          </div>
+          <div class="form-group">
+            <label for="price">Price</label>
+            <input type="number" id="price" [value]="selectedProduct?.price || 0" (input)="updateProductPrice($any($event.target).value)" step="0.01" required>
+          </div>
+          <div class="form-group">
+            <label for="category">Category</label>
+            <select id="category" [value]="selectedProduct?.category_id || 0" (change)="updateProductCategory($any($event.target).value)">
+              <option value="0">Select Category</option>
+              <option *ngFor="let category of categories" [value]="category.id">
+                {{ category.name }}
+              </option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="stock">Stock Quantity</label>
+            <input type="number" id="stock" [value]="selectedProduct?.stock_quantity || 0" (input)="updateProductStock($any($event.target).value)" required>
+          </div>
+        </div>
+        <div class="form-group full-width">
+          <label for="description">Description</label>
+          <textarea id="description" [value]="selectedProduct?.description || ''" (input)="updateProductDescription($any($event.target).value)" rows="4"></textarea>
+        </div>
+        <div class="form-group full-width">
+          <label for="imageUrl">Image URL</label>
+          <input type="url" id="imageUrl" [value]="selectedProduct?.image_url || ''" (input)="updateProductImageUrl($any($event.target).value)" placeholder="https://example.com/image.jpg">
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn btn-success" [disabled]="loading">
+            {{ isCreating ? 'Create Product' : 'Update Product' }}
+          </button>
+          <button type="button" class="btn btn-secondary" (click)="cancelEdit()">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Products Table -->
+  <div *ngIf="!loading && !isEditing && !isCreating" class="products-table">
+    <div class="table-card">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Price</th>
+            <th>Category</th>
+            <th>Stock</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let product of products">
+            <td>{{ product.id }}</td>
+            <td>
+              <div class="product-name">
+                <strong>{{ product.name }}</strong>
+                <img *ngIf="product.image_url" [src]="product.image_url" [alt]="product.name" class="product-image">
+              </div>
+            </td>
+            <td>
+              <span class="description">{{ product.description || '-' }}</span>
+            </td>
+            <td class="price">${{ product.price.toFixed(2) }}</td>
+            <td>{{ getCategoryName(product.category_id || 0) }}</td>
+            <td class="stock" [class.low-stock]="product.stock_quantity < 10">
+              {{ product.stock_quantity }}
+            </td>
+            <td>
+              <div class="action-buttons">
+                <button class="btn btn-sm btn-info" (click)="selectProduct(product)" title="Edit">
+                  ✏️
+                </button>
+                <button class="btn btn-sm btn-danger" (click)="deleteProduct(product)" title="Delete">
+                  🗑️
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      
+      <div *ngIf="products.length === 0" class="no-data">
+        <p>No products found. Click "Add New Product" to create one.</p>
+      </div>
+    </div>
+  </div>
+</div>

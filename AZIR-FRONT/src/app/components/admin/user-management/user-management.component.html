@@ -1,0 +1,93 @@
+<div class="user-management">
+  <!-- Header -->
+  <div class="section-header">
+    <h2>👥 User Management</h2>
+    <button class="btn btn-primary" (click)="createNewUser()">
+      <span>➕</span> Add New User
+    </button>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading">
+    <p>Loading users...</p>
+  </div>
+
+  <!-- Error Message -->
+  <div *ngIf="error" class="error-message">
+    <p>⚠️ {{ error }}</p>
+  </div>
+
+  <!-- Edit/Create Form -->
+  <div *ngIf="isEditing || isCreating" class="edit-form">
+    <div class="form-card">
+      <h3>{{ isCreating ? 'Create New User' : 'Edit User' }}</h3>
+      <form (ngSubmit)="saveUser()">
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="name">First Name</label>
+            <input type="text" id="name" [value]="selectedUser?.name || ''" (input)="updateUserName($any($event.target).value)" required>
+          </div>
+          <div class="form-group">
+            <label for="lastname">Last Name</label>
+            <input type="text" id="lastname" [value]="selectedUser?.lastname || ''" (input)="updateUserLastname($any($event.target).value)" required>
+          </div>
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" [value]="selectedUser?.email || ''" (input)="updateUserEmail($any($event.target).value)" required>
+          </div>
+          <div class="form-group">
+            <label for="phone">Phone</label>
+            <input type="tel" id="phone" [value]="selectedUser?.phone || ''" (input)="updateUserPhone($any($event.target).value)">
+          </div>
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn btn-success" [disabled]="loading">
+            {{ isCreating ? 'Create User' : 'Update User' }}
+          </button>
+          <button type="button" class="btn btn-secondary" (click)="cancelEdit()">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Users Table -->
+  <div *ngIf="!loading && !isEditing && !isCreating" class="users-table">
+    <div class="table-card">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Created</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let user of users">
+            <td>{{ user.id }}</td>
+            <td>{{ user.name }} {{ user.lastname }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.phone || '-' }}</td>
+            <td>{{ formatDate(user.createdAt) }}</td>
+            <td>
+              <div class="action-buttons">
+                <button class="btn btn-sm btn-info" (click)="selectUser(user)" title="Edit">
+                  ✏️
+                </button>
+                <button class="btn btn-sm btn-danger" (click)="deleteUser(user)" title="Delete">
+                  🗑️
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      
+      <div *ngIf="users.length === 0" class="no-data">
+        <p>No users found. Click "Add New User" to create one.</p>
+      </div>
+    </div>
+  </div>
+</div>
